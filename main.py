@@ -1,5 +1,7 @@
 
 import dropbox
+import pickle
+import zlib
 
 from base64 import b64decode, b64encode
 from tinydb import TinyDB, Query
@@ -31,14 +33,12 @@ def sync_push():
 
     with open('passwords.json', 'rb') as f:
         data = f.read()
-    k = b64encode(data)
+
+    k = zlib.compress(pickle.dumps(data))
 
     try:
-        dropx.files_upload(k, '/passwordBank/passwords.kp')
+        dropx.files_upload(k, '/passwordBank/passwords.txt')
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
         return None
 
-
-
-sync_push()
