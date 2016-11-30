@@ -10,6 +10,8 @@ from crypto import encrypt_dump, decrypt_dump
 from xxx import TOKEN  # the drop api key is here
 
 db = TinyDB('passwords.json')
+dropx = dropbox.Dropbox(TOKEN['token'])
+
 
 def encrypt(master, site, site_password):
 
@@ -28,17 +30,21 @@ def decrypt(master, site):
 
 
 def sync_push():
-
-    dropx = dropbox.Dropbox(TOKEN['token'])
-
     with open('passwords.json', 'rb') as f:
         data = f.read()
 
     k = zlib.compress(pickle.dumps(data))
 
     try:
-        dropx.files_upload(k, '/passwordBank/passwords.txt')
+        dropx.files_upload(k, '/passwordBank/passwords.kp')
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
         return None
+
+
+def sync_pull():
+    md, res = dropx.files_download('/passwordBank/passwords.kp')
+    data = pickle.loads(zlib.decompress(res.content))
+    with open('passwords.json', 'w') as f:
+        f.write(data.decode('utf-8'))
 
