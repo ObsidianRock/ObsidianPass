@@ -14,6 +14,12 @@ def encrypt(master, site, site_password):
     db.insert({'site': site, 'password': data})
 
 
+def decrypt(master, site):
 
+    field = Query()
+    data = db.search(field.site == site)[0]['password']
+    password = decrypt_dump(str(master), data)
+
+    return password
 
 
