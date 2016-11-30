@@ -4,4 +4,7 @@ venv
 .idea
 *.json
 
+xxx.py
+setting.ini
+
 __pycache__

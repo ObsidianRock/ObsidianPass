@@ -1,11 +1,13 @@
 
+import dropbox
+
+from base64 import b64decode, b64encode
 from tinydb import TinyDB, Query
 
 from crypto import encrypt_dump, decrypt_dump
-
+from xxx import TOKEN  # the drop api key is here
 
 db = TinyDB('passwords.json')
-
 
 def encrypt(master, site, site_password):
 
@@ -23,3 +25,20 @@ def decrypt(master, site):
     return password
 
 
+def sync_push():
+
+    dropx = dropbox.Dropbox(TOKEN['token'])
+
+    with open('passwords.json', 'rb') as f:
+        data = f.read()
+    k = b64encode(data)
+
+    try:
+        dropx.files_upload(k, '/passwordBank/passwords.kp')
+    except dropbox.exceptions.ApiError as err:
+        print('*** API error', err)
+        return None
+
+
+
+sync_push()
