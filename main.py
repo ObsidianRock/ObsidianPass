@@ -11,6 +11,8 @@ from xxx import TOKEN  # dropbox api key
 dbx = TinyDB('passwords.json')
 dropx = dropbox.Dropbox(TOKEN['token'])
 
+file_name = 'passwords'
+
 
 def encrypt(master, site, site_password, db=dbx):
 
@@ -39,22 +41,22 @@ def update_password(master, site, new_password, db=dbx):
         print('Incorrect Master Password')
 
 
-def sync_push():
-    with open('passwords.json', 'rb') as f:
+def sync_push(file):
+    with open(file + '.json', 'rb') as f:
         data = f.read()
 
     binary = zlib.compress(pickle.dumps(data))
     mode = dropbox.files.WriteMode.overwrite
     try:
 
-        dropx.files_upload(binary, '/passwordBank/passwords.kp', mode)
+        dropx.files_upload(binary, '/passwordBank/' + file + '.kp', mode)
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
         return None
 
 
-def sync_pull():
-    md, res = dropx.files_download('/passwordBank/passwords.kp')
+def sync_pull(file):
+    md, res = dropx.files_download('/passwordBank/' + file + '.kp')
     data = pickle.loads(zlib.decompress(res.content))
     with open('passwords.json', 'w') as f:
         f.write(data.decode('utf-8'))
