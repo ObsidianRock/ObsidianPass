@@ -3,11 +3,10 @@ import dropbox
 import pickle
 import zlib
 
-from base64 import b64decode, b64encode
 from tinydb import TinyDB, Query
 
 from crypto import encrypt_dump, decrypt_dump
-from xxx import TOKEN  # the drop api key is here
+from xxx import TOKEN  # dropbox api key
 
 db = TinyDB('passwords.json')
 dropx = dropbox.Dropbox(TOKEN['token'])
