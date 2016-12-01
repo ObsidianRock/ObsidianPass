@@ -3,9 +3,9 @@ import random
 
 from tinydb import TinyDB, Query
 
-from main import db, dropx, encrypt, decrypt
+from main import dropx, encrypt, decrypt
 
-db = TinyDB('test.json')
+dby = TinyDB('test.json')
 
 
 def random_char(y):
@@ -16,5 +16,5 @@ def test_encrypt_decrypt():
     master = 1234
     site = random_char(5)
     site_password = 4444
-    encrypt(master, site, site_password)
-    assert decrypt(master, site) == str(site_password)
+    encrypt(master, site, site_password, db=dby)
+    assert decrypt(master, site, db=dby) == str(site_password)

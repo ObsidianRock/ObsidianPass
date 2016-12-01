@@ -8,17 +8,17 @@ from tinydb import TinyDB, Query
 from crypto import encrypt_dump, decrypt_dump, check
 from xxx import TOKEN  # dropbox api key
 
-db = TinyDB('passwords.json')
+dbx = TinyDB('passwords.json')
 dropx = dropbox.Dropbox(TOKEN['token'])
 
 
-def encrypt(master, site, site_password):
+def encrypt(master, site, site_password, db=dbx):
 
     data = encrypt_dump(str(master), str(site_password))
     db.insert({'site': site, 'password': data})
 
 
-def decrypt(master, site):
+def decrypt(master, site, db=dbx):
 
     field = Query()
     data = db.search(field.site == site)[0]['password']
@@ -27,7 +27,7 @@ def decrypt(master, site):
     return password
 
 
-def update_password(master, site, new_password):
+def update_password(master, site, new_password, db=dbx):
 
     field = Query()
     data = db.search(field.site == site)[0]['password']
