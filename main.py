@@ -28,19 +28,6 @@ def decrypt(master, site):
     return password
 
 
-def sync_push():
-    with open('passwords.json', 'rb') as f:
-        data = f.read()
-
-    k = zlib.compress(pickle.dumps(data))
-
-    try:
-        dropx.files_upload(k, '/passwordBank/passwords.kp')
-    except dropbox.exceptions.ApiError as err:
-        print('*** API error', err)
-        return None
-
-
 def update_password(master, site, new_password):
 
     field = Query()
@@ -53,9 +40,24 @@ def update_password(master, site, new_password):
         print('Incorrect Master Password')
 
 
+def sync_push():
+    with open('passwords.json', 'rb') as f:
+        data = f.read()
+
+    binary = zlib.compress(pickle.dumps(data))
+    mode = dropbox.files.WriteMode.overwrite
+    try:
+
+        dropx.files_upload(binary, '/passwordBank/passwords.kp', mode)
+    except dropbox.exceptions.ApiError as err:
+        print('*** API error', err)
+        return None
+
+
 def sync_pull():
     md, res = dropx.files_download('/passwordBank/passwords.kp')
     data = pickle.loads(zlib.decompress(res.content))
     with open('passwords.json', 'w') as f:
         f.write(data.decode('utf-8'))
+
 
