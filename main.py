@@ -5,7 +5,7 @@ import zlib
 
 from tinydb import TinyDB, Query
 
-from crypto import encrypt_dump, decrypt_dump
+from crypto import encrypt_dump, decrypt_dump, check
 from xxx import TOKEN  # dropbox api key
 
 db = TinyDB('passwords.json')
@@ -39,6 +39,18 @@ def sync_push():
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
         return None
+
+
+def update_password(master, site, new_password):
+
+    field = Query()
+    data = db.search(field.site == site)[0]['password']
+
+    if decrypt_dump(str(master), data):
+        db.update({'password': encrypt_dump(str(master), str(new_password))}, field.site == site)
+        print('updated password')
+    else:
+        print('Incorrect Master Password')
 
 
 def sync_pull():
