@@ -61,13 +61,15 @@ def decrypt(master, site, db=dbx):
 def update(master, site, new_password, db=dbx):
 
     field = Query()
-    data = db.search(field.site == site)[0]['password']
-
-    if decrypt_dump(str(master), data):
-        db.update({'password': encrypt_dump(str(master), str(new_password))}, field.site == site)
-        click.echo('updated password')
-    else:
-        click.echo('Incorrect Master Password')
+    try:
+        data = db.search(field.site == site)[0]['password']
+        if decrypt_dump(str(master), data):
+            db.update({'password': encrypt_dump(str(master), str(new_password))}, field.site == site)
+            click.echo('updated password')
+        else:
+            click.echo('Incorrect Master Password')
+    except:
+        click.echo('Site does not exist')
 
 
 @click.command()
