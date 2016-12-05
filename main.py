@@ -64,6 +64,24 @@ def update(master, site, new_password, db=dbx):
         click.echo('Incorrect Master Password')
 
 
+@click.command()
+@click.option('--master', prompt='Your master password',
+              help='The master password to encrypt data.')
+@click.option('--site', prompt='Your site',
+              help='The site to add password.')
+def delete(master, site, db=dbx):
+    field = Query()
+    try:
+        data = db.search(field.site == site)[0]['password']
+        if decrypt_dump(str(master), data):
+            db.remove(field.site == site)
+            click.echo('deleted password')
+        else:
+            click.echo('Wrong master password')
+    except:
+        click.echo('site data doesnt exist')
+
+
 def sync_push(file):
     with open(file + '.json', 'rb') as f:
         data = f.read()
@@ -92,6 +110,7 @@ def main():
 main.add_command(encrypt)
 main.add_command(decrypt)
 main.add_command(update)
+main.add_command(delete)
 
 
 if __name__ == "__main__":
