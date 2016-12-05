@@ -90,6 +90,12 @@ def delete(master, site, db=dbx):
         click.echo('site does not exist')
 
 
+@click.command()
+def sites(db=dbx):
+    for password in db.all():
+        click.echo(password['site'])
+
+
 def sync_push(file):
     with open(file + '.json', 'rb') as f:
         data = f.read()
@@ -119,6 +125,7 @@ main.add_command(encrypt)
 main.add_command(decrypt)
 main.add_command(update)
 main.add_command(delete)
+main.add_command(sites)
 
 
 if __name__ == "__main__":
