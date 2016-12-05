@@ -24,7 +24,12 @@ file_name = 'passwords'  ## need a way to specify json folder as well
               help='The password for the site')
 def encrypt(master, site, site_password, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
-    db.insert({'site': site, 'password': data})
+    try:
+        db.insert({'site': site, 'password': data})
+        click.echo('Password inserted successfully')
+    except Exception as e:
+        click.echo(str(e))
+        click.echo('Password could not be inserted')
 
 
 @click.command()
@@ -38,7 +43,6 @@ def decrypt(master, site, db=dbx):
     data = db.search(field.site == site)[0]['password']
     password = decrypt_dump(str(master), data)
     click.echo(password)
-    return password
 
 
 @click.command()
@@ -88,7 +92,6 @@ def main():
 main.add_command(encrypt)
 main.add_command(decrypt)
 main.add_command(update)
-
 
 
 if __name__ == "__main__":
