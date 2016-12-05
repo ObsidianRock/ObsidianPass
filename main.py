@@ -1,5 +1,6 @@
 
 import dropbox
+import click
 import pickle
 import zlib
 
@@ -8,18 +9,25 @@ from tinydb import TinyDB, Query
 from crypto import encrypt_dump, decrypt_dump, check
 from xxx import TOKEN  # dropbox api key
 
-dbx = TinyDB('passwords.json')
-dropx = dropbox.Dropbox(TOKEN['token'])
+dbx = TinyDB('passwords.json')           #
+dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
 
-file_name = 'passwords'
+file_name = 'passwords'  ## need a way to specify json folder as well
 
 
+@click.command()
+@click.option('--master', prompt='Your master password',
+              help='The master password to encrypt data.')
+@click.option('--site', prompt='Your site',
+              help='The site to add password.')
+@click.option('--site_password', prompt='Your site Password',
+              help='The password for the site')
 def encrypt(master, site, site_password, db=dbx):
-
     data = encrypt_dump(str(master), str(site_password))
     db.insert({'site': site, 'password': data})
 
 
+@click.command()
 def decrypt(master, site, db=dbx):
 
     field = Query()
@@ -62,3 +70,15 @@ def sync_pull(file):
         f.write(data.decode('utf-8'))
 
 
+@click.group()
+def main():
+    pass
+
+main.add_command(encrypt)
+main.add_command(decrypt)
+
+
+
+if __name__ == "__main__":
+    main()
+    
