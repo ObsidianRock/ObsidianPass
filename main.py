@@ -41,16 +41,23 @@ def decrypt(master, site, db=dbx):
     return password
 
 
-def update_password(master, site, new_password, db=dbx):
+@click.command()
+@click.option('--master', prompt='Your master password',
+              help='The master password to encrypt data.')
+@click.option('--site', prompt='Your site',
+              help='The site to add password.')
+@click.option('--new_password', prompt='New site Password',
+              help='The new password for site')
+def update(master, site, new_password, db=dbx):
 
     field = Query()
     data = db.search(field.site == site)[0]['password']
 
     if decrypt_dump(str(master), data):
         db.update({'password': encrypt_dump(str(master), str(new_password))}, field.site == site)
-        print('updated password')
+        click.echo('updated password')
     else:
-        print('Incorrect Master Password')
+        click.echo('Incorrect Master Password')
 
 
 def sync_push(file):
@@ -80,6 +87,7 @@ def main():
 
 main.add_command(encrypt)
 main.add_command(decrypt)
+main.add_command(update)
 
 
 
