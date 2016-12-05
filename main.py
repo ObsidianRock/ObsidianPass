@@ -40,9 +40,15 @@ def encrypt(master, site, site_password, db=dbx):
 def decrypt(master, site, db=dbx):
 
     field = Query()
-    data = db.search(field.site == site)[0]['password']
-    password = decrypt_dump(str(master), data)
-    click.echo(password)
+    try:
+        data = db.search(field.site == site)[0]['password']
+        password = decrypt_dump(str(master), data)
+        if password:
+            click.echo(password)
+        else:
+            click.echo('Incorrect Master Password')
+    except:
+        click.echo('Site does not exist')
 
 
 @click.command()
@@ -79,7 +85,7 @@ def delete(master, site, db=dbx):
         else:
             click.echo('Wrong master password')
     except:
-        click.echo('site data doesnt exist')
+        click.echo('site does not exist')
 
 
 def sync_push(file):
