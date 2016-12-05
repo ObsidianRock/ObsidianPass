@@ -16,11 +16,16 @@ file_name = 'passwords'  ## need a way to specify json folder as well
 
 
 @click.command()
-@click.option('--master', prompt='Your master password',
+@click.option('--master',
+              prompt='Your master password',
+              hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site', prompt='Your site',
+@click.option('--site',
+              prompt='Your site',
               help='The site to add password.')
-@click.option('--site_password', prompt='Your site Password',
+@click.option('--site_password',
+              prompt='Your site Password',
+              hide_input=True,
               help='The password for the site')
 def encrypt(master, site, site_password, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
@@ -33,9 +38,12 @@ def encrypt(master, site, site_password, db=dbx):
 
 
 @click.command()
-@click.option('--master', prompt='Your master password',
+@click.option('--master',
+              prompt='Your master password',
+              hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site', prompt='Your site',
+@click.option('--site',
+              prompt='Your site',
               help='The site to add password.')
 def decrypt(master, site, db=dbx):
 
@@ -52,11 +60,16 @@ def decrypt(master, site, db=dbx):
 
 
 @click.command()
-@click.option('--master', prompt='Your master password',
+@click.option('--master',
+              prompt='Your master password',
+              hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site', prompt='Your site',
+@click.option('--site',
+              prompt='Your site',
               help='The site to add password.')
-@click.option('--new_password', prompt='New site Password',
+@click.option('--new_password',
+              prompt='New site Password',
+              hide_input=True,
               help='The new password for site')
 def update(master, site, new_password, db=dbx):
 
@@ -73,9 +86,12 @@ def update(master, site, new_password, db=dbx):
 
 
 @click.command()
-@click.option('--master', prompt='Your master password',
+@click.option('--master',
+              prompt='Your master password',
+              hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site', prompt='Your site',
+@click.option('--site',
+              prompt='Your site',
               help='The site to add password.')
 def delete(master, site, db=dbx):
     field = Query()
