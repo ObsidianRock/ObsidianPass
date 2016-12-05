@@ -28,12 +28,16 @@ def encrypt(master, site, site_password, db=dbx):
 
 
 @click.command()
+@click.option('--master', prompt='Your master password',
+              help='The master password to encrypt data.')
+@click.option('--site', prompt='Your site',
+              help='The site to add password.')
 def decrypt(master, site, db=dbx):
 
     field = Query()
     data = db.search(field.site == site)[0]['password']
     password = decrypt_dump(str(master), data)
-
+    click.echo(password)
     return password
 
 
@@ -81,4 +85,3 @@ main.add_command(decrypt)
 
 if __name__ == "__main__":
     main()
-    
