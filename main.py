@@ -132,6 +132,7 @@ def sites(db=dbx):
             click.secho('Note:        ' + ' ' + note, fg='yellow')
         click.secho('Last Updated:' + ' ' + date)
 
+
 @click.command(help='sync encrypted database to dropbox')
 def sync_push():
 
@@ -143,9 +144,9 @@ def sync_push():
 
     try:
         dropx.files_upload(binary, '/passwordBank/passwords.kp', mode)
-        click.echo('Database is sync on dropbox')
-    except dropbox.exceptions.ApiError as err:
-        print('*** API error', err)
+        click.secho('Database is sync on dropbox', fg='green')
+    except dropbox.exceptions.ApiError as e:
+        click.secho('*** API error' + ' ' + str(e), fg='red')
 
 
 @click.command(help='sync database on dropbox to local file')
@@ -155,8 +156,8 @@ def sync_pull():
         data = pickle.loads(zlib.decompress(res.content))
         with open(file_name, 'w') as f:
             f.write(data.decode('utf-8'))
-    except dropbox.exceptions.ApiError as err:
-        print('*** API error', err)
+    except dropbox.exceptions.ApiError as e:
+        click.secho('*** API error' + ' ' + str(e), fg='red')
 
 
 @click.group()
