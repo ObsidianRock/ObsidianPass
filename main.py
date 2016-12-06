@@ -50,21 +50,21 @@ def encrypt(master, account, site_password, db=dbx):
               prompt='Your master password',
               hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site',
+@click.option('--account',
               prompt='Your site',
               help='The site to add password.')
-def decrypt(master, site, db=dbx):
+def decrypt(master, account, db=dbx):
 
     field = Query()
     try:
-        data = db.search(field.site == site)[0]['password']
+        data = db.search(field.Account == account)[0]['Password']
         password = decrypt_dump(str(master), data)
         if password:
             click.echo(password)
         else:
-            click.echo('Incorrect Master Password')
+            click.echo('Incorrect master password')
     except:
-        click.echo('Site does not exist')
+        click.echo('Account does not exist')
 
 
 @click.command()
