@@ -35,10 +35,12 @@ dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
               prompt='Account password',
               hide_input=True,
               help='Password for the account or site')
-def encrypt(master, account, site_password, db=dbx):
+@click.option('--note',
+              help='Some note include in the database, example purpose of account')
+def encrypt(master, account, site_password, note, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
     try:
-        db.insert({'Account': account, 'Password': data, 'Last updated': datetime.now()})
+        db.insert({'Account': account, 'Password': data, 'Last updated': datetime.now(), 'Note': note})
         click.echo('Password inserted successfully')
     except:
         click.echo('Password could not be inserted')
