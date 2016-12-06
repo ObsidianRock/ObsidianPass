@@ -94,23 +94,23 @@ def update(master, account, new_password, db=dbx):
 
 @click.command()
 @click.option('--master',
-              prompt='Your master password',
+              prompt='Master password',
               hide_input=True,
-              help='The master password to encrypt data.')
-@click.option('--site',
+              help='Master password to encrypt data.')
+@click.option('--account',
               prompt='Your site',
-              help='The site to add password.')
-def delete(master, site, db=dbx):
+              help='Account to add password.')
+def delete(master, account, db=dbx):
     field = Query()
     try:
-        data = db.search(field.site == site)[0]['password']
+        data = db.search(field.Account == account)[0]['Password']
         if decrypt_dump(str(master), data):
-            db.remove(field.site == site)
-            click.echo('deleted password')
+            db.remove(field.Account == account)
+            click.echo('Deleted password')
         else:
             click.echo('Wrong master password')
     except:
-        click.echo('site does not exist')
+        click.echo('Account does not exist')
 
 
 @click.command(help='Lists the number of sites in database')
