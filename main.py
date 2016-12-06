@@ -41,9 +41,9 @@ def encrypt(master, account, site_password, note, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
     try:
         db.insert({'Account': account, 'Password': data, 'Last updated': datetime.now(), 'Note': note})
-        click.echo('Password inserted successfully')
+        click.secho('Password inserted successfully', fg='green')
     except:
-        click.echo('Password could not be inserted')
+        click.secho('Password could not be inserted', fg='red')
 
 
 @click.command()
@@ -60,11 +60,11 @@ def decrypt(master, account, db=dbx):
         data = db.search(field.Account == account)[0]['Password']
         password = decrypt_dump(str(master), data)
         if password:
-            click.echo(password)
+            click.secho(password, fg='green')
         else:
-            click.echo('Incorrect master password')
+            click.secho('Incorrect master password', fg='red')
     except:
-        click.echo('The account does not exist')
+        click.secho('The account does not exist', fg='red')
 
 
 @click.command()
@@ -91,11 +91,11 @@ def update(master, account, new_password, note, db=dbx):
             db.update({'Last updated': datetime.now()}, field.Account == account)
             if note:
                 db.update({'Note': note}, field.Account == account)
-            click.echo('Updated password')
+            click.secho('Updated password', fg='green')
         else:
-            click.echo('Incorrect Master Password')
+            click.secho('Incorrect Master Password', fg='red')
     except:
-        click.echo('Site does not exist')
+        click.secho('Site does not exist', fg='red')
 
 
 @click.command()
@@ -112,11 +112,11 @@ def delete(master, account, db=dbx):
         data = db.search(field.Account == account)[0]['Password']
         if decrypt_dump(str(master), data):
             db.remove(field.Account == account)
-            click.echo('Deleted password')
+            click.secho('Deleted password', fg='green')
         else:
-            click.echo('Wrong master password')
+            click.secho('Wrong master password', fg='red')
     except:
-        click.echo('Account does not exist')
+        click.secho('Account does not exist', fg='red')
 
 
 @click.command(help='Lists the number of sites in database')
