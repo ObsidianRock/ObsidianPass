@@ -79,7 +79,9 @@ def decrypt(master, account, db=dbx):
               prompt='New account Password',
               hide_input=True,
               help='New password for account')
-def update(master, account, new_password, db=dbx):
+@click.option('--note',
+              help='Some note include in the database, example purpose of account')
+def update(master, account, new_password, note, db=dbx):
 
     field = Query()
     try:
@@ -87,6 +89,8 @@ def update(master, account, new_password, db=dbx):
         if decrypt_dump(str(master), data):
             db.update({'Password': encrypt_dump(str(master), str(new_password))}, field.Account == account)
             db.update({'Last updated': datetime.now()}, field.Account == account)
+            if note:
+                db.update({'Note': note}, field.Account == account)
             click.echo('Updated password')
         else:
             click.echo('Incorrect Master Password')
@@ -120,7 +124,8 @@ def sites(db=dbx):
     for password in db.all():
         account = password['Account']
         date = password['Last updated'].strftime('%d-%b-%Y')
-        click.echo(date + ' ' + account)
+        note = password['Note']
+        click.echo(date + '||' + account + '||' + note)
 
 
 @click.command(help='sync encrypted database to dropbox')
