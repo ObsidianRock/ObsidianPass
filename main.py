@@ -6,16 +6,15 @@ import zlib
 
 from tinydb import TinyDB, Query
 
-from crypto import encrypt_dump, decrypt_dump, check
+from crypto import encrypt_dump, decrypt_dump
 from xxx import TOKEN  # dropbox api key
 
 
-file_name = 'passwords.json'
+file_name = 'passwords.json' ## need a way to specify json folder as well
 
-dbx = TinyDB(file_name)           #
+
+dbx = TinyDB(file_name)
 dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
-
- ## need a way to specify json folder as well
 
 
 @click.command()
