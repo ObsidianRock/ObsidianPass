@@ -25,36 +25,34 @@ dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
 
 @click.command()
 @click.option('--master',
-              prompt='Your master password',
+              prompt='Master password',
               hide_input=True,
-              help='The master password to encrypt data.')
+              help='Master password to encrypt data.')
 @click.option('--account',
-              prompt='The account name',
+              prompt='Account name',
               help='The site or account to add password.')
 @click.option('--site_password',
-              prompt='Your account password',
+              prompt='Account password',
               hide_input=True,
-              help='The password for the account or site')
+              help='Password for the account or site')
 def encrypt(master, account, site_password, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
     try:
         db.insert({'Account': account, 'Password': data, 'Last updated': datetime.now()})
         click.echo('Password inserted successfully')
-    except Exception as e:
-        click.echo(str(e))
+    except:
         click.echo('Password could not be inserted')
 
 
 @click.command()
 @click.option('--master',
-              prompt='Your master password',
+              prompt='Master password',
               hide_input=True,
-              help='The master password to encrypt data.')
+              help='Master password to encrypt data.')
 @click.option('--account',
-              prompt='Your site',
-              help='The site to add password.')
+              prompt='Account name',
+              help='Site or account to add password.')
 def decrypt(master, account, db=dbx):
-
     field = Query()
     try:
         data = db.search(field.Account == account)[0]['Password']
@@ -64,29 +62,30 @@ def decrypt(master, account, db=dbx):
         else:
             click.echo('Incorrect master password')
     except:
-        click.echo('Account does not exist')
+        click.echo('The account does not exist')
 
 
 @click.command()
 @click.option('--master',
-              prompt='Your master password',
+              prompt='Master password',
               hide_input=True,
-              help='The master password to encrypt data.')
-@click.option('--site',
+              help='Master password to encrypt data.')
+@click.option('--account',
               prompt='Your site',
               help='The site to add password.')
 @click.option('--new_password',
-              prompt='New site Password',
+              prompt='New account Password',
               hide_input=True,
-              help='The new password for site')
-def update(master, site, new_password, db=dbx):
+              help='New password for account')
+def update(master, account, new_password, db=dbx):
 
     field = Query()
     try:
-        data = db.search(field.site == site)[0]['password']
+        data = db.search(field.Account == account)[0]['Password']
         if decrypt_dump(str(master), data):
-            db.update({'password': encrypt_dump(str(master), str(new_password))}, field.site == site)
-            click.echo('updated password')
+            db.update({'Password': encrypt_dump(str(master), str(new_password))}, field.Account == account)
+            db.update({'Last updated': datetime.now()}, field.Account == account)
+            click.echo('Updated password')
         else:
             click.echo('Incorrect Master Password')
     except:
