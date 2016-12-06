@@ -106,28 +106,31 @@ def delete(master, site, db=dbx):
         click.echo('site does not exist')
 
 
-@click.command()
+@click.command(help='Lists the number of sites in database')
 def sites(db=dbx):
     for password in db.all():
         click.echo(password['site'])
 
 
-def sync_push(file):
-    with open(file + '.json', 'rb') as f:
+@click.command(help='sync encrypted database to dropbox')
+def sync_push():
+    with open('passwords.json', 'rb') as f:
         data = f.read()
 
     binary = zlib.compress(pickle.dumps(data))
     mode = dropbox.files.WriteMode.overwrite
-    try:
 
-        dropx.files_upload(binary, '/passwordBank/' + file + '.kp', mode)
+    try:
+        dropx.files_upload(binary, '/passwordBank/passwords.kp', mode)
+        click.echo('Database is sync on dropbox')
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
         return None
 
 
-def sync_pull(file):
-    md, res = dropx.files_download('/passwordBank/' + file + '.kp')
+@click.command(help='sync database on dropbox to local file')
+def sync_pull():
+    md, res = dropx.files_download('/passwordBank/passwords.kp')
     data = pickle.loads(zlib.decompress(res.content))
     with open('passwords.json', 'w') as f:
         f.write(data.decode('utf-8'))
@@ -142,6 +145,8 @@ main.add_command(decrypt)
 main.add_command(update)
 main.add_command(delete)
 main.add_command(sites)
+main.add_command(sync_push)
+main.add_command(sync_pull)
 
 
 if __name__ == "__main__":
