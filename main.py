@@ -116,7 +116,9 @@ def delete(master, account, db=dbx):
 @click.command(help='Lists the number of sites in database')
 def sites(db=dbx):
     for password in db.all():
-        click.echo(password['site'])
+        account = password['Account']
+        date = password['Last updated'].strftime('%d-%b-%Y')
+        click.echo(date + ' ' + account)
 
 
 @click.command(help='sync encrypted database to dropbox')
