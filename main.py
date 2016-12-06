@@ -1,19 +1,25 @@
+from xxx import TOKEN  # dropbox api key
 
 import dropbox
 import click
 import pickle
 import zlib
 
+from datetime import datetime
+
 from tinydb import TinyDB, Query
+from tinydb_serialization import SerializationMiddleware
 
 from crypto import encrypt_dump, decrypt_dump
-from xxx import TOKEN  # dropbox api key
+from datetime_serializer import DateTimeSerializer
 
 
 file_name = 'passwords.json' ## need a way to specify json folder as well
 
+serialization = SerializationMiddleware()
+serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
-dbx = TinyDB(file_name)
+dbx = TinyDB(file_name, storage=serialization)
 dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
 
 
@@ -22,17 +28,17 @@ dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
               prompt='Your master password',
               hide_input=True,
               help='The master password to encrypt data.')
-@click.option('--site',
-              prompt='Your site',
-              help='The site to add password.')
+@click.option('--account',
+              prompt='The account name',
+              help='The site or account to add password.')
 @click.option('--site_password',
-              prompt='Your site Password',
+              prompt='Your account password',
               hide_input=True,
-              help='The password for the site')
-def encrypt(master, site, site_password, db=dbx):
+              help='The password for the account or site')
+def encrypt(master, account, site_password, db=dbx):
     data = encrypt_dump(str(master), str(site_password))
     try:
-        db.insert({'site': site, 'password': data})
+        db.insert({'Account': account, 'Password': data, 'Last updated': datetime.now()})
         click.echo('Password inserted successfully')
     except Exception as e:
         click.echo(str(e))
