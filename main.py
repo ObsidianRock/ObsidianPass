@@ -9,10 +9,13 @@ from tinydb import TinyDB, Query
 from crypto import encrypt_dump, decrypt_dump, check
 from xxx import TOKEN  # dropbox api key
 
-dbx = TinyDB('passwords.json')           #
+
+file_name = 'passwords.json'
+
+dbx = TinyDB(file_name)           #
 dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
 
-file_name = 'passwords'  ## need a way to specify json folder as well
+ ## need a way to specify json folder as well
 
 
 @click.command()
@@ -115,7 +118,7 @@ def sites(db=dbx):
 @click.command(help='sync encrypted database to dropbox')
 def sync_push():
 
-    with open('passwords.json', 'rb') as f:
+    with open(file_name, 'rb') as f:
         data = f.read()
 
     binary = zlib.compress(pickle.dumps(data))
@@ -133,11 +136,10 @@ def sync_pull():
     try:
         md, res = dropx.files_download('/passwordBank/passwords.kp')
         data = pickle.loads(zlib.decompress(res.content))
-        with open('passwords.json', 'w') as f:
+        with open(file_name, 'w') as f:
             f.write(data.decode('utf-8'))
     except dropbox.exceptions.ApiError as err:
         print('*** API error', err)
-
 
 
 @click.group()
