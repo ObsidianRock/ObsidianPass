@@ -125,8 +125,12 @@ def sites(db=dbx):
         account = password['Account']
         date = password['Last updated'].strftime('%d-%b-%Y')
         note = password['Note']
-        click.echo(date + '||' + account + '||' + note)
 
+        click.secho('-------------------------------------', fg='magenta', bold=True)
+        click.secho('Account:     ' + ' ' + account, fg='green')
+        if note:
+            click.secho('Note:        ' + ' ' + note, fg='yellow')
+        click.secho('Last Updated:' + ' ' + date)
 
 @click.command(help='sync encrypted database to dropbox')
 def sync_push():
@@ -157,6 +161,7 @@ def sync_pull():
 
 @click.group()
 def main():
+    click.clear()
     pass
 
 main.add_command(encrypt)
