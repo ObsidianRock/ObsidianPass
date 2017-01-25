@@ -14,14 +14,15 @@ from crypto import encrypt_dump, decrypt_dump
 from datetime_serializer import DateTimeSerializer
 
 
-file_name = 'passwords.json' ## need a way to specify json folder as well
+file_name = 'passwords2.json' ## need a way to specify json folder as well
 
 serialization = SerializationMiddleware()
 serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
 dbx = TinyDB(file_name, storage=serialization)
-dropx = dropbox.Dropbox(TOKEN['token'])  # put this in setup option
 
+
+## maybe encrypt and compress file in local storage just like with dropbox
 
 @click.command()
 @click.option('--master',
