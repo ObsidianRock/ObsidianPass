@@ -21,7 +21,7 @@ source venv/bin/activate (for windows venv\Scripts\activate)
 pip install -r requirements.txt
 ```
 
-[get drop developer api](https://www.dropbox.com/developers)
+[Obtain a dropbox developer api token](https://www.dropbox.com/developers)
 
 ## Running Application
 
