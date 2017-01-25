@@ -20,7 +20,7 @@ serialization = SerializationMiddleware()
 serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
 dbx = TinyDB(file_name, storage=serialization)
-
+dropx = dropbox.Dropbox(TOKEN['token'])
 
 ## maybe encrypt and compress file in local storage just like with dropbox
 

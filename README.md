@@ -2,7 +2,7 @@
 
 Experiment password manager that syncs to dropbox
 
-# Packages Used
+## Packages Used
 
 * Click (for creating beautiful command line interfaces )
 * Cryptography (provides cryptographic recipes and primitives)
@@ -10,9 +10,9 @@ Experiment password manager that syncs to dropbox
 * Tinydb
 
 
-# Getting Started
+## Getting Started
 
-## Install Packages
+### Install Packages
 
 '''
 pip install virtualenv
@@ -22,51 +22,53 @@ pip install -r requirements.txt
 '''
 
 
-# Running Application
+## Running Application
 
-## Help
+### Help
 ```
 python main.py --help
 ```
-## Encrypt
+### Encrypt
 
-'''
+```
 python main.py encrypt
-'''
+```
+![link to image](https://github.com/ObsidianRock/ObsidianPass/blob/master/img/encrypt_2.jpg  "Encrypting demo")
 
-## Decrypt
 
-'''
+### Decrypt
+
+```
 python main.py decrypt
-'''
+```
 
-## Update password
+### Update password
 
-'''
+```
 python main.py update
-'''
+```
 
-## Delete password
+### Delete password
 
-'''
+```
 python main.py delete
-'''
+```
 
-## List of sites
+### List of sites
 
-'''
+```
 python main.py
-'''
+```
+![link to image](https://github.com/ObsidianRock/ObsidianPass/blob/master/img/sites_2.jpg  "show list of sites")
 
+### sync encrypted database to dropbox
 
-## sync encrypted database to dropbox
+```
+python main.py sync_push
+```
 
-'''
+### sync database on dropbox to local file
 
-'''
-
-## sync database on dropbox to local file
-
-'''
-
-'''
+```
+python main.py sync_pull
+```
