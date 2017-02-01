@@ -1,6 +1,6 @@
 # ObsidianPass
 
-Experiment password manager that syncs to dropbox
+Experimental password manager that syncs to dropbox
 
 ## Packages Used
 
